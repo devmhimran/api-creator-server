@@ -14,17 +14,24 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
   
-      const uploadDatabase = client.db('api-creation').collection('news-api');
+      const newsCollection = client.db('api-creation').collection('news-api');
+      const pcProductCollection = client.db('api-creation').collection('pc-product');
       app.get('/news-data', async (req, res) =>{
         const query = {};
-        const cursor = uploadDatabase.find(query);
+        const cursor = newsCollection.find(query);
+        const data = await cursor.toArray();
+        res.send(data);
+      })
+      app.get('/pc-product', async (req, res) =>{
+        const query = {};
+        const cursor = pcProductCollection.find(query);
         const data = await cursor.toArray();
         res.send(data);
       })
   
       app.post('/news-upload', (req, res) => {
         const addData = req.body;
-        const result = uploadDatabase.insertOne(addData)
+        const result = newsCollection.insertOne(addData)
         res.send(result)
   
       })
