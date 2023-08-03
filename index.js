@@ -18,12 +18,17 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const newsCollection = client.db("api-creation").collection("news-api");
+
     const pcProductCollection = client
       .db("api-creation")
       .collection("pc-product");
-    const pizzaliciousCollection = client
-      .db("api-creation")
-      .collection("pizzalicious");
+    const pizzaliciousCollection = client;
+
+    const todoCollection = client.db("todo-drag-and-drop").collection("todo");
+
+    const todoSerialCollection = client
+      .db("todo-drag-and-drop")
+      .collection("serial");
 
     // GET ALL NEWS DATA
     app.get("/news-data", async (req, res) => {
@@ -68,6 +73,34 @@ async function run() {
     app.post("/news-upload", (req, res) => {
       const addData = req.body;
       const result = newsCollection.insertOne(addData);
+      res.send(result);
+    });
+
+    //GET ALL TODO DATA
+    app.get("/pc-product", async (req, res) => {
+      const query = {};
+      const cursor = pcProductCollection.find(query);
+      const data = await cursor.toArray();
+      res.send(data);
+    });
+    app.get("/todo", async (req, res) => {
+      const query = {};
+      const cursor = todoCollection.find(query);
+      const data = await cursor.toArray();
+      res.send(data);
+    });
+
+    //POST TODO DATA
+    app.post("/todo-add", async (req, res) => {
+      const addData = req.body;
+      const result = await todoCollection.insertOne(addData);
+      res.send(result);
+    });
+
+    //DELETE TODO DATA
+    app.delete("/delete-todo/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await todoCollection.deleteOne({ _id: ObjectId(id) });
       res.send(result);
     });
   } finally {
