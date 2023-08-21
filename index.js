@@ -22,7 +22,9 @@ async function run() {
     const pcProductCollection = client
       .db("api-creation")
       .collection("pc-product");
-    const pizzaliciousCollection = client;
+    const pizzaliciousCollection = client
+      .db("api-creation")
+      .collection("pizzalicious");
 
     const todoCollection = client.db("todo-drag-and-drop").collection("todo");
 
