@@ -245,6 +245,13 @@ async function run() {
       }
     });
 
+    app.get("/auth/news-data", verifyJWT, async (req, res) => {
+      const query = {};
+      const cursor = newsCollection.find(query);
+      const data = await cursor.toArray();
+      res.send(data);
+    });
+
     // user authentication system end
   } finally {
     // await client.close();
